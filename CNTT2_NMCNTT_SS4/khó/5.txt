@@ -1,0 +1,36 @@
+TỰ ĐỘNG HÓA QUẢN LÝ TỆP BẰNG TERMINAL
+PHẦN 1: KỊCH BẢN CÂU LỆNH POWERSHELL (THEO ĐÚNG THỨ TỰ LOGIC)
+Dưới đây là chuỗi câu lệnh Windows PowerShell hoàn chỉnh đóng vai trò "Robot quản gia" để tự động hóa quy trình dọn dẹp thư mục Downloads:
+# Bước 1: Khởi tạo đầy đủ các thư mục đích
+New-Item -Path ".\Media\Images", ".\Study\Assignments" -ItemType Directory -Force
+
+# Bước 2: Gom và di chuyển các file ảnh (*.jpg, *.png) vào Media\Images
+Move-Item -Path ".\*.jpg", ".\*.png" -Destination ".\Media\Images" -Force
+
+# Bước 3: Gom và di chuyển các file bài tập (*.docx, *.pdf) vào Study\Assignments
+Move-Item -Path ".\*.docx", ".\*.pdf" -Destination ".\Study\Assignments" -Force
+
+# Bước 4: Xóa vĩnh viễn các file rác tạm thời (*.tmp, *.cache) để giải phóng dung lượng
+Remove-Item -Path ".\*.tmp", ".\*.cache" -Force
+PHẦN 2: GIẢI THÍCH CHI TIẾT VAI TRÒ VÀ THAM SỐ CỦA TỪNG LỆNH
+1. Khởi tạo thư mục đích (New-Item)
+• Lệnh: New-Item -Path ".\Media\Images", ".\Study\Assignments" -ItemType Directory -Force
+• Vai trò: Tạo sẵn các thư mục lưu trữ Media\Images và Study\Assignments trước khi tiến hành phân loại và di chuyển tệp.
+• Tham số:
+ - -ItemType Directory: Khai báo loại đối tượng cần tạo là thư mục.
+ - -Force: Tự động tạo toàn bộ các thư mục cha (Media, Study) nếu chưa tồn tại, đồng thời không báo lỗi nếu các thư mục này đã có sẵn trên hệ thống.
+2. Di chuyển tệp tin (Move-Item)
+• Lệnh:
+- Move-Item -Path ".\*.jpg", ".\*.png" -Destination ".\Media\Images" -Force
+- Move-Item -Path ".\*.docx", ".\*.pdf" -Destination ".\Study\Assignments" -Force
+• Vai trò: Tìm kiếm tất cả các file có đuôi mở rộng tương ứng và di chuyển chúng vào đúng vị trí quy định.
+• Tham số & Ký tự đại diện:
+- Ký tự đại diện * (Wildcard): *.jpg hay *.pdf giúp lọc đại diện cho tất cả các file có tên bất kỳ nhưng mang đuôi mở rộng chỉ định.
+- -Destination: Xác định vị trí thư mục đích cần chuyển file tới.
+- -Force: Cho phép di chuyển và ghi đè file nếu ở thư mục đích đã tồn tại file trùng tên.
+3. Dọn dẹp file rác (Remove-Item)
+• Lệnh: Remove-Item -Path ".\*.tmp", ".\*.cache" -Force
+• Vai trò: Xóa vĩnh viễn các tập tin tạm/rác để giải phóng dung lượng đĩa cứng.
+• Tham số & An toàn dữ liệu:
+- Chỉ định đích danh các phần mở rộng rác *.tmp và *.cache nhằm tuân thủ nguyên tắc an toàn dữ liệu, tuyệt đối không đụng tới các thư mục hay tệp tin quan trọng khác.
+- -Force: Ép buộc xóa kể cả các tệp rác ở trạng thái chỉ đọc (Read-only).

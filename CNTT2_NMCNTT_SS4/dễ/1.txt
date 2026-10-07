@@ -1,0 +1,33 @@
+Khởi tạo cấu trúc dự án bằng Terminal
+Phần 1: Phân tích các lỗi sai trong chuỗi lệnh của Nam
+Dựa trên hình ảnh hiện trường thao tác, Nam đã gặp phải 3 lỗi chính sau:
+Lỗi 1: Thao tác với tên thư mục chứa khoảng trắng không có dấu ngoặc kép
+• Hành vi sai: Nam gõ lệnh tạo hoặc di chuyển vào thư mục có tên chứa dấu cách mà không bọc trong dấu ngoặc kép (ví dụ: mkdir Shopee Lite hoặc cd Shopee Lite).
+• Giải thích từ Terminal:
+PowerShell xem khoảng trắng là ký tự phân tách các tham số (parameter). Khi gõ mkdir Shopee Lite, PowerShell hiểu rằng Nam đang muốn tạo 2 thư mục riêng biệt: một thư mục tên là Shopee và một thư mục tên là Lite.
+Đồng thời, khi gõ cd Shopee Lite, PowerShell sẽ báo lỗi:
+A positional parameter cannot be found that accepts argument 'Lite'.
+(Do cd chỉ nhận 1 tham số đường dẫn, tham số thứ 2 là Lite bị thừa).
+Lỗi 2: Sai đường dẫn tương đối khi di chuyển thư mục (cd)
+• Hành vi sai: Nam sử dụng câu lệnh chuyển thư mục không chính xác hoặc cố truy cập vào thư mục con/cháu khi đang đứng ở sai vị trí (ví dụ: cd src/components khi chưa tạo hoặc đứng ở thư mục gốc ngoài cùng).
+• Giải thích từ Terminal:
+Khi thư mục mục tiêu chưa tồn tại tại vị trí làm việc hiện tại, PowerShell sẽ báo lỗi:
+Cannot find path '...' because it does not exist.
+Lỗi 3: Tạo thư mục lồng nhau (Nested Directories) sai cú pháp
+• Hành vi sai: Nam gõ các đường dẫn tạo nhiều cấp thư mục liên tiếp mà không có ngoặc bao quanh hoặc không dùng dấu ngoặc nhọn {} đúng cách để tạo các thư mục song song.
+• Giải thích từ Terminal:
+PowerShell không thể tự phân giải các chuỗi đường dẫn phức tạp nếu không truyền dưới dạng danh sách mảng (array) hoặc không có dấu ngoặc bọc các tên đường dẫn có khoảng trắng.
+Phần 2: Hoàn thiện chuỗi lệnh chuẩn (Chỉ trong 3 dòng lệnh)
+Để tạo nhanh toàn bộ cấu trúc dự án Shopee-Lite (hoặc Shopee Lite) một cách tối ưu và không gặp lỗi, Nam chỉ cần sử dụng 3 dòng lệnh PowerShell sau:
+# Dòng 1: Tạo thư mục dự án gốc và di chuyển ngay vào bên trong
+New-Item -ItemType Directory -Path "Shopee-Lite" -Force; Set-Location "Shopee-Lite"
+
+# Dòng 2: Tạo tất cả các thư mục con và thư mục lồng nhau cùng lúc
+mkdir src/components, src/assets/images, src/assets/styles, docs, tests
+
+# Dòng 3: Tạo sẵn các file khởi tạo ban đầu cho dự án
+New-Item -ItemType File -Path "README.md", "src/index.js", "src/assets/styles/main.css"
+Giải thích điểm kỹ thuật:
+   1 Dùng dấu ngoặc kép "": Luôn bọc tên thư mục/đường dẫn trong dấu "" nếu có chứa khoảng trắng.
+   2 Tạo nhiều thư mục bằng phân tách dấu phẩy ,: PowerShell hỗ trợ truyền danh sách chuỗi qua dấu phẩy , để tạo hàng loạt cấu trúc thư mục lồng nhau (src/components, src/assets/...) chỉ bằng một lệnh mkdir duy nhất.
+   3 Tham số -Force: Giúp tạo đường dẫn tự động nếu các thư mục cha chưa tồn tại mà không làm ngắt đoạn chương trình.

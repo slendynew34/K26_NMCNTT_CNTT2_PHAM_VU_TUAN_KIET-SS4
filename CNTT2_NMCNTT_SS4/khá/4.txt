@@ -1,0 +1,21 @@
+QUẢN LÝ ĐƯỜNG DẪN TRONG HỆ THỐNG TỆP (EXERCISE 04)
+PHẦN 1: PHÂN TÍCH & ĐỀ XUẤT
+Bảng so sánh Đường dẫn tuyệt đối (Absolute Path) và Đường dẫn tương đối (Relative Path)
+Tiêu chí so sánh                       Cách 1: Đường dẫn tuyệt đối (C:\Users\An\Desktop\Project\Data\users.csv)                                                                                                                             Cách 2: Đường dẫn tương đối (../Data/users.csv)
+Tính di động (Portability)             Rất kém: Gắn cứng (hard-code) tên ổ đĩa, tài khoản người dùng (An), và cấu trúc thư mục hệ thống. Khi gửi dự án cho người khác hoặc đổi ổ đĩa, chương trình sẽ báo lỗi FileNotFoundError lập tức.    Rất cao: Phụ thuộc vào vị trí tương đối giữa file mã nguồn và file dữ liệu bên trong dự án. Có thể chia sẻ toàn bộ thư mục Project cho bất kỳ ai chạy trên ổ đĩa hay hệ điều hành nào.
+Độ dài câu lệnh                        Dài & Cồng kềnh: Phải viết đầy đủ toàn bộ cấu trúc từ thư mục gốc (Root) của hệ thống.                                                                                                               Ngắn gọn & Tối ưu: Chỉ thể hiện khoảng cách di chuyển từ vị trí file hiện tại đến file đích.
+Tính an toàn & Bảo mật                 Kém an toàn: Lộ thông tin nhạy cảm của hệ thống máy tính cá nhân (tên User, cấu trúc ổ đĩa, vị trí lưu trữ cá nhân).                                                                                 An toàn cao: Giới hạn phạm vi truy cập chỉ trong phạm vi thư mục của dự án (Project Sandbox), không làm lộ cấu trúc hệ thống.
+PHẦN 2: LỰA CHỌN GIẢI PHÁP TỐI ƯU
+1. Chốt giải pháp
+Giải pháp tối ưu nhất cho An là Cách 2 (Đường dẫn tương đối: ../Data/users.csv).
+• Lý do: Đáp ứng 100% quy tắc nghiệp vụ đề ra. Khi An nén và gửi toàn bộ thư mục Project cho bạn bè, dù người nhận lưu ở ổ D:\, E:\ hay chạy trên Linux/macOS với tên User khác nhau, mã Python vẫn truy xuất chính xác file users.csv mà không cần sửa đổi bất kỳ dòng code nào.
+2. Giải thích ý nghĩa của các ký hiệu . và ..
+Trong hệ thống tệp và giao diện dòng lệnh (Terminal/Shell), hai ký hiệu đại diện thư mục được quy định chuẩn như sau:
+• Ký hiệu . (Một dấu chấm):
+- Ý nghĩa: Đại diện cho thư mục hiện tại (Current Working Directory) - nơi tập tin mã nguồn đang đứng hoặc nơi câu lệnh đang được thực thi.
+- Ví dụ: ./Data/users.csv nghĩa là tìm file users.csv trong thư mục Data nằm ngay tại thư mục hiện tại.
+• Ký hiệu .. (Hai dấu chấm):
+- Ý nghĩa: Đại diện cho thư mục cha (Parent Directory) - lùi lại một cấp thư mục lên phía trên thư mục hiện tại.
+- Ví dụ cụ thể bài toán: Giả sử file Python đang nằm tại Project/src/app.py:
+   1 .. giúp lùi từ thư mục src ra thư mục cha là Project.
+   2 /Data/users.csv đi tiếp vào thư mục Data để trỏ tới file users.csv.

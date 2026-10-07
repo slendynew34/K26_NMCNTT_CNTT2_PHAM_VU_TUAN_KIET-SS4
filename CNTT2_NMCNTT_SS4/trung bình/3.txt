@@ -1,0 +1,37 @@
+Kiến trúc sư hạ tầng Cloud Server
+PHẦN 1: MÃ NGUỒN (LỆNH POWERSHELL THEO THỨ TỰ THỰC THI)
+Dưới đây là chuỗi câu lệnh Windows PowerShell thực thi tuần tự các yêu cầu nghiệp vụ:
+# 1. Tạo cấu trúc cây thư mục dự án Farm-Manager
+New-Item -Path ".\Farm-Manager\code\app", ".\Farm-Manager\database\db", ".\Farm-Manager\logs\guides" -ItemType Directory -Force
+
+# 2. Tạo 3 file rỗng trong thư mục app
+New-Item -Path ".\Farm-Manager\code\app\main.py", ".\Farm-Manager\code\app\models.py", ".\Farm-Manager\code\app\utils.py" -ItemType File -Force
+
+# 3. Sao chép đệ quy thư mục logs sang logs-backup (ngang hàng với logs)
+Copy-Item -Path ".\Farm-Manager\logs" -Destination ".\Farm-Manager\logs-backup" -Recurse -Force
+Ghi chú & Giải thích câu lệnh:
+• New-Item -Path ... -ItemType Directory -Force:
+- Chức năng: Tạo mới các thư mục theo đường dẫn khai báo.
+- Tham số -Force: Tự động tạo tất cả các thư mục cha còn thiếu (như Farm-Manager, code, database, logs) nếu chúng chưa tồn tại mà không báo lỗi.
+• New-Item -Path ... -ItemType File -Force:
+- Chức năng: Tạo các tập tin rỗng (main.py, models.py, utils.py) tại vị trí chỉ định.
+- Tham số -Force: Ghi đè hoặc tạo mới file mà không làm gián đoạn lệnh.
+• Copy-Item -Path ... -Destination ... -Recurse -Force:
+- Chức năng: Sao chép thư mục logs thành logs-backup nằm ngang hàng trong Farm-Manager.
+- Tham số -Recurse: (Rất quan trọng) Thực hiện sao chép đệ quy, đảm bảo copy toàn bộ nội dung bên trong thư mục logs, bao gồm tất cả các thư mục con (như guides) và các file thuộc về nó chứ không chỉ copy vỏ thư mục rỗng.
+- Tham số -Force: Cho phép sao chép đè nếu thư mục đích đã tồn tại.
+PHẦN 2: KIỂM THỬ VÀ GIẢI THÍCH
+1. Lệnh kiểm thử cấu trúc thư mục:
+Sau khi thực thi xong các lệnh trên, gõ lệnh sau để kiểm tra kết quả:
+Get-ChildItem -Path ".\Farm-Manager"
+# Hoặc sử dụng Alias rút gọn:
+ls .\Farm-Manager
+Kết quả kiểm tra kỳ vọng:
+Màn hình xuất hiện danh sách 4 thư mục con ngang hàng bên trong Farm-Manager:
+• code
+• database
+• logs
+• logs-backup
+2. Giải thích: Tại sao cần dùng đường dẫn tương đối (.\) thay vì đường dẫn tuyệt đối (C:\...)?
+• Tính linh hoạt và di động (Portability): Đường dẫn tương đối dựa trên vị trí thư mục hiện tại của người dùng. Do đó, script có thể chạy thành công ở bất kỳ máy tính hay thư mục làm việc nào (ví dụ: D:\Projects, C:\Users\Admin\Desktop, v.v.) mà không bị lỗi phụ thuộc vào cấu trúc ổ đĩa cứng.
+• Tránh rủi ro Hard-code: Đường dẫn tuyệt đối (như C:\Users\Student\...) bị cố định. Nếu đem đoạn mã sang máy khác hoặc môi trường máy chủ (Server/Cloud) có tên người dùng hoặc ổ đĩa khác, câu lệnh sẽ lập tức bị lỗi PathNotFoundException.
